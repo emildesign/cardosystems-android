@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.connectivity.sdk"
+    namespace = "com.emildesign.sdk"
     compileSdk = 37
 
     defaultConfig {

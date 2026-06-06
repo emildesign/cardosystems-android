@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.connectivity.app"
+    namespace = "com.emildesign.app"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.connectivity.app"
+        applicationId = "com.emildesign.app"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
