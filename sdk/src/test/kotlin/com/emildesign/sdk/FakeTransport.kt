@@ -12,7 +12,8 @@ internal class FakeTransport : DeviceTransport {
 
     var connectCallCount = 0
     var disconnectCallCount = 0
-    var lastCommand: DeviceCommand? = null
+    val sentCommands = mutableListOf<DeviceCommand>()
+    val lastCommand: DeviceCommand? get() = sentCommands.lastOrNull()
 
     override suspend fun connect(deviceId: String) {
         connectCallCount++
@@ -23,6 +24,6 @@ internal class FakeTransport : DeviceTransport {
     }
 
     override suspend fun sendCommand(command: DeviceCommand) {
-        lastCommand = command
+        sentCommands.add(command)
     }
 }
