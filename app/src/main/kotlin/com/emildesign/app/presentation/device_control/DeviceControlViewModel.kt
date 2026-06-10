@@ -25,10 +25,10 @@ class DeviceControlViewModel(
     }
 
     val connectionState: StateFlow<ConnectionState> = connector.connectionState
-        .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5_000), ConnectionState.Idle)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ConnectionState.Idle)
 
     val deviceData: StateFlow<DeviceData?> = connector.deviceData
-        .stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5_000), null)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     fun connect(deviceId: String) {
         viewModelScope.launch {
