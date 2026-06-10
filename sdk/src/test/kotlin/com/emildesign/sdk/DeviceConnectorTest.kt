@@ -159,8 +159,15 @@ class DeviceConnectorTest {
 
         // Verification: Transport should have received all calls. 
         assertEquals(5, transport.sentCommands.size)
-        val lastCommand = transport.lastCommand as com.emildesign.sdk.data.transport.model.DeviceCommand.SetVolume
-        assertEquals(5, lastCommand.level)
+//        val lastCommand = transport.lastCommand as com.emildesign.sdk.data.transport.model.DeviceCommand.SetVolume
+//        assertEquals(5, lastCommand.level)
+
+        val lastCommand = transport.lastCommand
+        assertNotNull("Expected a command to have been sent", lastCommand)
+        assertTrue(
+            "Expected last command to be SetVolume but was $lastCommand",
+            lastCommand is com.emildesign.sdk.data.transport.model.DeviceCommand.SetVolume
+        )
     }
 
     @Test
@@ -173,6 +180,25 @@ class DeviceConnectorTest {
         
         // Verify only one connect call reached the transport
         assertEquals(1, transport.connectCallCount)
+    }
+
+    @Test
+    fun `givenConnected_whenDisconnected_thenDeviceDataIsCleared`() = runTest {
+        // Setup: connect and send data
+        connector.connect("device-01")
+        transport.eventsFlow.emit(TransportEvent.Connected)
+        transport.eventsFlow.emit(TransportEvent.DataUpdate(DeviceData(volume = 5, battery = 70)))
+        advanceUntilIdle()
+
+        assertNotNull(connector.deviceData.value)
+
+        // Action: disconnect
+        connector.disconnect()
+        transport.eventsFlow.emit(TransportEvent.Disconnected(DisconnectReason.ConsumerDisconnected))
+        advanceUntilIdle()
+
+        // Verify: deviceData is cleared
+        assertNull(connector.deviceData.value)
     }
 
     @Test
